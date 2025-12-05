@@ -15,7 +15,7 @@ jobs:
         configuration: [ Debug, Release ]
 
     env:
-      Solution_Name: "owned by juzuk1q.sln"
+      Solution_Name: ownedbyjuzuk1q.sln
 
     steps:
 
