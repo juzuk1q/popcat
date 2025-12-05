@@ -1,4 +1,4 @@
-name: .NET Core Desktop
+name: .NET Desktop Build
 
 on:
   push:
@@ -7,63 +7,35 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   build:
+    runs-on: windows-latest
 
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        configuration: [ Debug, Release ]
 
-    runs-on: windows-latest
-
-    env:
-      Solution_Name: Popcat.sln
-      Test_Project_Path: Popcat.Tests/Popcat.Tests.csproj
-      Wap_Project_Directory: Popcat.Package
-      Wap_Project_Path: Popcat.Package/Popcat.Package.wapproj
-      
     steps:
 
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
 
-    - name: Install .NET Core
+    - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
 
-    - name: Setup MSBuild.exe
+    - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Execute unit tests
-      run: dotnet test
+    - name: Restore packages
+      run: msbuild ownedByJuzuk1q.sln -t:Restore -p:Configuration=${{ matrix.configuration }}
 
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
-
-    - name: Decode the pfx
-      run: |
-        $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-        $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
-        [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-
-    - name: Create the app package
-      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
-      env:
-        Appx_Bundle: Always
-        Appx_Bundle_Platforms: x86|x64
-        Appx_Package_Build_Mode: StoreUpload
-        Configuration: ${{ matrix.configuration }}
-
-    - name: Remove the pfx
-      run: Remove-Item -path "$env:Wap_Project_Directory/GitHubActionsWorkflow.pfx"
+    - name: Build solution
+      run: msbuild ownedByJuzuk1q.sln -p:Configuration=${{ matrix.configuration }}
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: MSIX Package
-        path: ${{ env.Wap_Project_Directory }}\AppPackages
+        name: ownedByJuzuk1q-${{ matrix.configuration }}
+        path: |
+          **/bin/${{ matrix.configuration }}/
