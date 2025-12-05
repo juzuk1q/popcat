@@ -15,14 +15,13 @@ jobs:
         configuration: [ Debug, Release ]
 
     env:
-      Solution_Name: ownedbyjuzuk1q.sln
+      Project_Path: "ownedByJuzuk1q.csproj"
 
     steps:
-
-    - name: Checkout
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install .NET
+    - name: Setup .NET 8
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
@@ -31,10 +30,10 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Restore packages
-      run: msbuild "$env:Solution_Name" -t:Restore -p:Configuration=${{ matrix.configuration }}
+      run: msbuild "$env:Project_Path" -t:Restore -p:Configuration=${{ matrix.configuration }}
 
-    - name: Build solution
-      run: msbuild "$env:Solution_Name" -p:Configuration=${{ matrix.configuration }}
+    - name: Build project
+      run: msbuild "$env:Project_Path" -p:Configuration=${{ matrix.configuration }}
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
