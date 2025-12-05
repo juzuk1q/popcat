@@ -68,17 +68,17 @@
             this.panel2.Size = new System.Drawing.Size(776, 353);
             this.panel2.TabIndex = 2;
             // 
-            // textBox1
+            // button1
             // 
-            this.textBox1.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            this.textBox1.Cursor = System.Windows.Forms.Cursors.Default;
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18.25F);
-            this.textBox1.Location = new System.Drawing.Point(342, 89);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.textBox1.Size = new System.Drawing.Size(118, 35);
-            this.textBox1.TabIndex = 2;
+            this.button1.BackColor = System.Drawing.Color.Silver;
+            this.button1.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.button1.Location = new System.Drawing.Point(665, 390);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(132, 49);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Next";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
